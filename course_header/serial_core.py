@@ -3,9 +3,6 @@
 import serial
 from time import sleep
 
-
-
-
 class Motor:
 	# sample: "MICEN" M means motor
 	def __init__(self,p_port):               	
@@ -202,7 +199,12 @@ if __name__ == "__main__":
 	sleep(2)
 	motor.run(0)
 	# color sensor test
-	color_sensor = 
-	
-    LS.go(70,70,1)
+	color_sensor = ColorSensor()
+	color = color_sensor.get_color_information()
+	print("color sensor information is: ",color)
+	# ultrasonic sensor test
+	ultrasonic_sensor = UltrasonicSensor()
+	ultrasonic_info = ultrasonic_sensor.get_distance_information()
+	print("ultrasonic info is: ", ultrasonic_info)
+
     
