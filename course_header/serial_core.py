@@ -9,7 +9,7 @@ class Motor:
 		self.motor_port = p_port.upper()
 		if self.motor_port not in ["A","B","C","D"]:
 			print("Motor Port Error")
-        self.motor_serial = serial.Serial(
+		self.motor_serial = serial.Serial(
 		    port='/dev/ttyS0',
 		    baudrate = 9600,
 		    parity=serial.PARITY_NONE,
@@ -75,26 +75,26 @@ class Motor:
 class ColorSensor:
 	# sample: "CI1EN" C means color mode 
 	def __init__(self,p_port):               	
-		self.color_sensor_port = str(p_port)
-		if self.color_sensor_port not in ["1","2","3","4"]:
-			print("Color Sensor Port Error")
-        self.color_sensor_serial = serial.Serial(
-		    port='/dev/ttyS0',
-		    baudrate = 9600,
-		    parity=serial.PARITY_NONE,
-		    stopbits=serial.STOPBITS_ONE,
-		    bytesize=serial.EIGHTBITS,
-		    timeout=0.05
-			   )
-		init_info = "CI" + str(self.color_sensor_port) + "EN"
-		self.color_sensor_serial.write(init_info.encode())
+	    self.color_sensor_port = str(p_port)
+	    if self.color_sensor_port not in ["1","2","3","4"]:
+	        print("Color Sensor Port Error")
+	    self.color_sensor_serial = serial.Serial(
+	        port='/dev/ttyS0',
+	        baudrate = 9600,
+	        parity=serial.PARITY_NONE,
+	        stopbits=serial.STOPBITS_ONE,
+	        bytesize=serial.EIGHTBITS,
+	        timeout=0.05
+	          )
+	    init_info = "CI" + str(self.color_sensor_port) + "EN"
+	    self.color_sensor_serial.write(init_info.encode())
 	# sample:"CG1EN" 
 	def get_color(self):
-		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
-		self.color_sensor_serial.write(get_color_info.encode())
-		readData = self.color_sensor_serial.readline()
-		angle = (readData.decode()).strip()
-		try:
+	    get_color_info = "CG" + str(self.color_sensor_port) + "EN"
+	    self.color_sensor_serial.write(get_color_info.encode())
+	    readData = self.color_sensor_serial.readline()
+	    angle = (readData.decode()).strip()
+	    try:
 	        color_value = color_str.split("S")[1]
 	    except:
 	        color_value = "R55G55X55Y5"
@@ -105,19 +105,19 @@ class ColorSensor:
 	    red = int(first,16)
 	    green = int(second,16)
 	    blue = int(third,16)
-		intensity = int(fourth)
-		if intensity < 7 or red == green:
+	    intensity = int(fourth)
+	    if intensity < 7 or red == green:
 	        return "Black"
 	    elif red > green:
 	        return "Red"
 	    else:
 	         return "Green"
 	def get_intensity(self):
-		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
-		self.color_sensor_serial.write(get_color_info.encode())
-		readData = self.color_sensor_serial.readline()
-		angle = (readData.decode()).strip()
-		try:
+	    get_color_info = "CG" + str(self.color_sensor_port) + "EN"
+	    self.color_sensor_serial.write(get_color_info.encode())
+	    readData = self.color_sensor_serial.readline()
+	    angle = (readData.decode()).strip()
+	    try:
 	        color_value = color_str.split("S")[1]
 	    except:
 	        color_value = "R55G55X55Y5"
@@ -128,14 +128,14 @@ class ColorSensor:
 	    red = int(first,16)
 	    green = int(second,16)
 	    blue = int(third,16)
-		intensity = int(fourth)
-		return intensity
+	    intensity = int(fourth)
+	    return intensity
 	def get_color_information(self):
-		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
-		self.color_sensor_serial.write(get_color_info.encode())
-		readData = self.color_sensor_serial.readline()
-		angle = (readData.decode()).strip()
-		try:
+	    get_color_info = "CG" + str(self.color_sensor_port) + "EN"
+	    self.color_sensor_serial.write(get_color_info.encode())
+	    readData = self.color_sensor_serial.readline()
+	    angle = (readData.decode()).strip()
+	    try:
 	        color_value = color_str.split("S")[1]
 	    except:
 	        color_value = "R55G55X55Y5"
@@ -155,7 +155,7 @@ class UltrasonicSensor:
 		self.ultrasonic_sensor_port = str(p_port)
 		if self.ultrasonic_sensor_port not in ["1","2","3","4"]:
 			print("Ultrasonic Sensor Port Error")
-        self.ultrasonic_sensor_serial = serial.Serial(
+		self.ultrasonic_sensor_serial = serial.Serial(
 		    port='/dev/ttyS0',
 		    baudrate = 9600,
 		    parity=serial.PARITY_NONE,
@@ -167,11 +167,11 @@ class UltrasonicSensor:
 		self.ultrasonic_sensor_serial.write(init_info.encode())
 	# sample:"UG1EN" 
 	def get_distance_information(self):
-		get_distance_info = "UG" + str(ultrasonic_sensor_port) + "EN"
-		self.ultrasonic_sensor_serial.write(get_distance_info.encode())
-		readData = self.ultrasonic_sensor_serial.readline()
-		distance_info = (readData.decode()).strip()
-		try:
+	    get_distance_info = "UG" + str(ultrasonic_sensor_port) + "EN"
+	    self.ultrasonic_sensor_serial.write(get_distance_info.encode())
+	    readData = self.ultrasonic_sensor_serial.readline()
+	    distance_info = (readData.decode()).strip()
+	    try:
 	        dis = distance_str.split("S")[1]
 	    except:
 	        self.d_count += 1
@@ -229,7 +229,7 @@ def getDistance():
 
 if __name__ == "__main__":
 	# motor test
-    motor = Motor("C")
+	motor = Motor("C")
 	motorc_angle = motor.get_angle()
 	print("motor c angle is: ", motorc_angle)
 	motor.run_time(30,3)
