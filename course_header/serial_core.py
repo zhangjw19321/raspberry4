@@ -55,16 +55,21 @@ class Motor:
 	# sample "MPYC20G10EN" Y means angle control and P means power method
 	def run_angle(self,p_speed,p_angle):
 		r_speed = speed_check(p_speed)
+		r_angle = r_angle/360.0
 		r_angle = angle_check(p_angle)
 		run_angle_motor_info = "MPY" + self.motor_port + str(r_speed) + "G" + str(r_angle) + "EN"
 		self.motor_serial.write(run_angle_motor_info.encode())
 		readData = self.motor_serial.readline()
-	# sample "MPXC20EN" X means real angle speed control and P means power method
+	# sample "MPXC20EN" X means real angle speed control and P means power method,convert to 0.5circle per sec
 	def run_speed(self,p_speed_pwm):
 		r_speed = speed_check(p_speed_pwm)
 		run_speed_motor_info = "MPX" + self.motor_port + str(r_speed) + "EN"
 		self.motor_serial.write(run_speed_motor_info.encode())
 		readData = self.motor_serial.readline()
+	def stop(self):
+		motor_stop_info = "MPZ" + self.motor_port + str(0) + "T" + str(0) + "EN"
+		self.motor_serial.write(motor_stop_info.encode())
+
 
 
 class ColorSensor:
@@ -84,8 +89,49 @@ class ColorSensor:
 		init_info = "CI" + str(self.color_sensor_port) + "EN"
 		self.color_sensor_serial.write(init_info.encode())
 	# sample:"CG1EN" 
+	def get_color(self):
+		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
+		self.color_sensor_serial.write(get_color_info.encode())
+		readData = self.color_sensor_serial.readline()
+		angle = (readData.decode()).strip()
+		try:
+	        color_value = color_str.split("S")[1]
+	    except:
+	        color_value = "R55G55X55Y5"
+	    first = color_value.split("R")[1].split("G")[0]
+	    second = color_value.split("G")[1].split("X")[0]
+	    third = color_value.split("X")[1].split("Y")[0]
+	    fourth = color_value.split("Y")[1]
+	    red = int(first,16)
+	    green = int(second,16)
+	    blue = int(third,16)
+		intensity = int(fourth)
+		if intensity < 7 or red == green:
+	        return "Black"
+	    elif red > green:
+	        return "Red"
+	    else:
+	         return "Green"
+	def get_intensity(self):
+		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
+		self.color_sensor_serial.write(get_color_info.encode())
+		readData = self.color_sensor_serial.readline()
+		angle = (readData.decode()).strip()
+		try:
+	        color_value = color_str.split("S")[1]
+	    except:
+	        color_value = "R55G55X55Y5"
+	    first = color_value.split("R")[1].split("G")[0]
+	    second = color_value.split("G")[1].split("X")[0]
+	    third = color_value.split("X")[1].split("Y")[0]
+	    fourth = color_value.split("Y")[1]
+	    red = int(first,16)
+	    green = int(second,16)
+	    blue = int(third,16)
+		intensity = int(fourth)
+		return intensity
 	def get_color_information(self):
-		get_color_info = "CG" + str(color_sensor_port) + "EN"
+		get_color_info = "CG" + str(self.color_sensor_port) + "EN"
 		self.color_sensor_serial.write(get_color_info.encode())
 		readData = self.color_sensor_serial.readline()
 		angle = (readData.decode()).strip()
@@ -117,7 +163,7 @@ class UltrasonicSensor:
 		    bytesize=serial.EIGHTBITS,
 		    timeout=0.05
 			   )
-		init_info = "UI" + str(self.ultrasonic_port) + "EN"
+		init_info = "UI" + str(self.ultrasonic_sensor.port) + "EN"
 		self.ultrasonic_sensor_serial.write(init_info.encode())
 	# sample:"UG1EN" 
 	def get_distance_information(self):
@@ -131,8 +177,6 @@ class UltrasonicSensor:
 	        self.d_count += 1
 	        dis = "999.99"
 	    return dis
-
-
 
 # compateble for old use
 ser = serial.Serial(
@@ -206,5 +250,6 @@ if __name__ == "__main__":
 	ultrasonic_sensor = UltrasonicSensor()
 	ultrasonic_info = ultrasonic_sensor.get_distance_information()
 	print("ultrasonic info is: ", ultrasonic_info)
+	print("git test")
 
     
